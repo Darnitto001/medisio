@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 
 from Hospitalapp.models import *
 
@@ -49,3 +49,19 @@ def delete(request,id):
   deleteappointment=Appointment.objects.get(id=id)
   deleteappointment.delete()
   return redirect('/show')
+
+def edit(request,id):
+    appointment=get_object_or_404(Appointment,id=id)
+    if request.method == "POST":
+        Appointment.name=request.POST.get('name')
+        Appointment.email=request.POST.get('email')
+        Appointment.phonenumber=request.POST.get('phonenumber')
+        Appointment.datetime=request.POST.get('datetime')
+        Appointment.department=request.POST.get('department')
+        Appointment.doctor=request.POST.get('doctor')
+        Appointment.message=request.POST.get('message')
+        Appointment.save()
+        return redirect('/show')
+    else:
+        return render(request, 'edit.html',{'Appointment':appointment})
+
